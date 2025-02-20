@@ -1,0 +1,66 @@
+/*
+ * Aoba Hacked Client
+ * Copyright (C) 2019-2024 coltonk9043
+ *
+ * Licensed under the GNU General Public License, Version 3 or later.
+ * See <http://www.gnu.org/licenses/>.
+ */
+
+package kokabiel.samurai.event.events;
+
+import kokabiel.samurai.event.listeners.AbstractListener;
+import kokabiel.samurai.event.listeners.KeyDownListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class KeyDownEvent extends AbstractEvent {
+    private final long window;
+    private final int key;
+    private final int scancode;
+    private final int action;
+    private final int modifiers;
+
+    public KeyDownEvent(long window, int key, int scancode, int action, int modifiers) {
+        super();
+        this.window = window;
+        this.key = key;
+        this.scancode = scancode;
+        this.action = action;
+        this.modifiers = modifiers;
+    }
+
+    public long GetWindow() {
+        return window;
+    }
+
+    public int GetKey() {
+        return key;
+    }
+
+    public int GetScanCode() {
+        return scancode;
+    }
+
+    public int GetAction() {
+        return action;
+    }
+
+    public int GetModifiers() {
+        return modifiers;
+    }
+
+    @Override
+    public void Fire(ArrayList<? extends AbstractListener> listeners) {
+        for (AbstractListener listener : List.copyOf(listeners)) {
+            KeyDownListener keyDownListener = (KeyDownListener) listener;
+            keyDownListener.onKeyDown(this);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Class<KeyDownListener> GetListenerClassType() {
+        return KeyDownListener.class;
+    }
+}

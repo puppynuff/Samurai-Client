@@ -1,0 +1,35 @@
+{
+	"required": true,
+	"package": "kokabiel.samurai.mixin.client",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"interfaces.ICamera",
+		"interfaces.ICuboid",
+		"interfaces.IEntity",
+		"interfaces.IEntityModel",
+		"interfaces.IEntityVelocityUpdateS2CPacket",
+		"interfaces.IExplosionS2CPacket",
+		"interfaces.IGameRenderer",
+		"interfaces.ILivingEntity",
+		"interfaces.IMinecraftClient",
+		"interfaces.IModelPart",
+		"interfaces.IMouse",
+		"interfaces.IMultiplayerScreen",
+		"interfaces.IPlayerInteractEntityC2SPacket",
+		"interfaces.IPlayerMoveC2SPacket",
+		"BackgroundRendererMixin",
+		"ClientConnectionMixin",
+		"ClientPlayerInteractionManagerMixin",
+		"KeyboardMixin",
+		"MinecraftClientMixin",
+		"MouseMixin",
+		"MultiplayerScreenMixin",
+		"TitleScreenMixin",
+		"GameRendererMixin",
+		"HandledScreenMixin",
+		"IngameHudMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

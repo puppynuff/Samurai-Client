@@ -1,0 +1,60 @@
+/*
+ * Aoba Hacked Client
+ * Copyright (C) 2019-2024 coltonk9043
+ *
+ * Licensed under the GNU General Public License, Version 3 or later.
+ * See <http://www.gnu.org/licenses/>.
+ */
+
+package kokabiel.samurai.gui.navigation.huds;
+
+import kokabiel.samurai.gui.GuiManager;
+import kokabiel.samurai.gui.Rectangle;
+import kokabiel.samurai.gui.ResizeMode;
+import kokabiel.samurai.gui.navigation.HudWindow;
+import kokabiel.samurai.utils.render.Render2D;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.PlayerListEntry;
+
+public class PingHud extends HudWindow {
+	private static final MinecraftClient MC = MinecraftClient.getInstance();
+	String pingText = null;
+
+	public PingHud(int x, int y) {
+		super("PingHud", x, y, 50, 24);
+		this.minWidth = 50f;
+		this.minHeight = 20f;
+		this.maxHeight = 20f;
+		resizeMode = ResizeMode.None;
+	}
+
+	@Override
+	public void update() {
+		ClientPlayNetworkHandler networkHandler = MC.getNetworkHandler();
+		if (networkHandler != null && MC.player != null) {
+			PlayerListEntry entry = networkHandler.getPlayerListEntry(MC.player.getUuid());
+			if (entry != null) {
+				int ping = entry.getLatency();
+				pingText = "Ping: " + ping + " ms";
+			} else {
+				pingText = "Ping: ?";
+			}
+		} else
+			pingText = null;
+	}
+
+	@Override
+	public void draw(DrawContext drawContext, float partialTicks) {
+		super.draw(drawContext, partialTicks);
+
+		if (pingText != null && isVisible()) {
+			Rectangle pos = position.getValue();
+			if (pos.isDrawable()) {
+				Render2D.drawString(drawContext, pingText, pos.getX(), pos.getY(),
+						GuiManager.foregroundColor.getValue().getColorAsInt());
+			}
+		}
+	}
+}

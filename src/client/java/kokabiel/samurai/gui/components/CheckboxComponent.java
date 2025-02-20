@@ -1,0 +1,96 @@
+/*
+ * Aoba Hacked Client
+ * Copyright (C) 2019-2024 coltonk9043
+ *
+ * Licensed under the GNU General Public License, Version 3 or later.
+ * See <http://www.gnu.org/licenses/>.
+ */
+
+package kokabiel.samurai.gui.components;
+
+import org.joml.Matrix4f;
+
+import kokabiel.samurai.event.events.MouseClickEvent;
+import kokabiel.samurai.gui.GuiManager;
+import kokabiel.samurai.gui.Margin;
+import kokabiel.samurai.gui.Size;
+import kokabiel.samurai.gui.colors.Color;
+import kokabiel.samurai.settings.types.BooleanSetting;
+import kokabiel.samurai.utils.render.Render2D;
+import kokabiel.samurai.utils.types.MouseAction;
+import kokabiel.samurai.utils.types.MouseButton;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.util.math.MatrixStack;
+
+public class CheckboxComponent extends Component {
+	private String text;
+	private BooleanSetting checkbox;
+	private Runnable onClick;
+
+	public CheckboxComponent(BooleanSetting checkbox) {
+		super();
+		this.text = checkbox.displayName;
+		this.checkbox = checkbox;
+
+		this.setMargin(new Margin(8f, 2f, 8f, 2f));
+	}
+
+	@Override
+	public void measure(Size availableSize) {
+		preferredSize = new Size(availableSize.getWidth(), 30.0f);
+	}
+
+	/**
+	 * Draws the checkbox to the screen.
+	 *
+	 * @param drawContext  The current draw context of the game.
+	 * @param partialTicks The partial ticks used for interpolation.
+	 */
+	@Override
+	public void draw(DrawContext drawContext, float partialTicks) {
+		super.draw(drawContext, partialTicks);
+
+		MatrixStack matrixStack = drawContext.getMatrices();
+		Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
+
+		float actualX = this.getActualSize().getX();
+		float actualY = this.getActualSize().getY();
+		float actualWidth = this.getActualSize().getWidth();
+
+		// Determine fill color based on checkbox state
+		Color fillColor = this.checkbox.getValue() ? new Color(0, 154, 0, 200) : new Color(154, 0, 0, 200);
+
+		Render2D.drawString(drawContext, this.text, actualX, actualY + 8, 0xFFFFFF);
+		Render2D.drawOutlinedRoundedBox(matrix4f, actualX + actualWidth - 24, actualY + 5, 20, 20, 3,
+				GuiManager.borderColor.getValue(), fillColor);
+	}
+
+	/**
+	 * Handles updating the Checkbox component.
+	 */
+	@Override
+	public void update() {
+		super.update();
+	}
+
+	@Override
+	public void onMouseClick(MouseClickEvent event) {
+		super.onMouseClick(event);
+		if (event.button == MouseButton.LEFT && event.action == MouseAction.DOWN) {
+			if (hovered) {
+				checkbox.toggle();
+				if (onClick != null)
+					onClick.run();
+				event.cancel();
+			}
+		}
+	}
+
+	public void setChecked(boolean checked) {
+		checkbox.setValue(checked);
+	}
+
+	public boolean isChecked() {
+		return checkbox.getValue();
+	}
+}
